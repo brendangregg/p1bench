@@ -5,7 +5,7 @@ Perturbation benchmark.
 
 This is intended to be used before other benchmark tests, to investigate CPU and memory variation. This helps you better interpret the results of any microbenchmark test, by characterizing variance that will sway results.
 
-Let's say you wanted to do a 500 ms CPU benchmark of gzip performance: p1bench can be run with a 500 ms interval to show what baseline variation you may see, based on a simple spin loop, before running the more complex gzip microbenchmark.
+Let's say you wanted to do a 500 ms CPU benchmark of gzip performance: p1bench can be run with a 500 ms interval to show what baseline variation you may see, based on a simple spin loop, before running a more complex gzip microbenchmark.
 
 p1bench can also be run in a mode (-m) to test memory variation.
 
@@ -51,7 +51,11 @@ Fastest rate: 440692064/s, 50th: 434796823/s, mean: 434921085/s, slowest: 427711
 
 Many numbers are printed to characterize variance, and the histogram shows it visually. Just from the histogram, I'd expect a variance of up to 2% (fastest to slowest) for a CPU microbenchmark of the same duration (500 ms).
 
-This is a custom histogram, where the bin size varies: 0.1% for variation <1%, 1% for variation < 20%, then 10% beyond that.
+This is a custom histogram, where the bin size varies:
+
+- variation 0 - 1%: 0.1% binsize
+- variation 1 - 20%: 1% binsize
+- variation 20+%: 10% binsize
 
 Here's a much noisier system:
 
@@ -105,10 +109,11 @@ USAGE:
 
 <pre>
 USAGE: p1bench [-hv] [-m Mbytes] [time(ms) [count]]
-                   -v   # verbose: per run details
-                   -v   # verbose: per run details
+                   -v         # verbose: per run details
+                   -m Mbytes  # memory test working set
    eg,
        p1bench          # 100ms (default) CPU spin loop
        p1bench 300      # 300ms CPU spin loop
        p1bench 300 100  # 300ms CPU spin loop, 100 times
+       p1bench -m 1024  # 1GB memory read loop
 </pre>
